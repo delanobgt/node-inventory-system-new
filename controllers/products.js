@@ -11,6 +11,16 @@ exports.getProducts = async (req, res) => {
   }
 }
 
+exports.createProduct = async (req, res) => {
+  try {
+    const { name } = req.body
+    const product = await db.Product.create({ name })
+    res.json({ product })
+  } catch (error) {
+    res.status(500).json({ error })
+  }
+}
+
 exports.updateProduct = async (req, res) => {
   try {
     const { product_id } = req.params
@@ -39,44 +49,36 @@ exports.deleteProduct = async (req, res) => {
 }
 
 exports.getInitialBalances = async (req, res) => {
-  const { productName } = req.query
+  // invoiceID: `##INITIAL[${productName}]##`
   try {
-    let initialMutation = await db.Mutation.findAll({
-      where: {
-        invoiceID: `##INITIAL[${productName}]##`
-      }
+    let initialMutations = await db.Mutation.findAll({
+      where: { type: 'Initial' }
     })
-    initialMutation = initialMutation || {
-      invoiceID: `##INITIAL[${productName}]##`,
-      price: 0,
-      quantity: 0
-    }
     res.json(initialMutations)
   } catch (err) {
     console.log(err)
     res.status(404).json({ error: true })
   }
-})
+}
 
-router.post('/api/initial-balance', async (req, res) => {
-  const { productName } = req.body
+exports.updateInitialBalance = async (req, res) => {
+  const { product_id } = req.params
   try {
     let product = await db.Product.findOne({
-      where: {
-        name: productName
-      }
+      where: { id: product_id }
     })
     let initialMutation = await db.Mutation.findOne({
       where: {
-        invoiceID: `##INITIAL[${productName}]##`
+        productID: product.id,
+        type: 'Initial',
       }
     })
     if (!initialMutation) initialMutation = new db.Mutation()
-    initialMutation.set('invoiceID', `##INITIAL[${productName}]##`)
+    initialMutation.set('invoiceID', `INITIAL${product.id}`)
     initialMutation.set('productID', product.id)
     initialMutation.set('doneAt', '1990-01-01')
-    initialMutation.set('info', '##INITIAL##')
-    initialMutation.set('type', 'Buy')
+    initialMutation.set('info', 'Initial Balance')
+    initialMutation.set('type', 'Initial')
     initialMutation.set('quantity', req.body.quantity)
     initialMutation.set('price', req.body.price)
     await initialMutation.save()
@@ -87,4 +89,4 @@ router.post('/api/initial-balance', async (req, res) => {
       msg: 'Error Initial Balance'
     })
   }
-})
+}
