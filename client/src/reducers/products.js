@@ -1,8 +1,10 @@
 import _ from 'lodash'
 import { 
-  GET_EMPLOYEES,
-  DELETE_EMPLOYEE,
-  TOGGLE_DELETE_EMPLOYEE_DIALOG,
+  GET_PRODUCTS,
+  CREATE_PRODUCT,
+  DELETE_PRODUCT,
+  UPDATE_PRODUCT,
+  TOGGLE_DELETE_PRODUCT_DIALOG,
 } from '../actions/conf'
 
 const INITIAL_STATE = {
@@ -12,19 +14,31 @@ const INITIAL_STATE = {
 
 export default function(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case GET_EMPLOYEES: {
+    case GET_PRODUCTS: {
       return { 
         ...state, 
         employees: _.mapKeys(action.payload, '_id')
       }
     }
-    case DELETE_EMPLOYEE: {
+    case CREATE_PRODUCT: {
       return { 
         ...state, 
         employees: _.pickBy(state.employees, employee => employee._id !== action.payload)
       }
     }
-    case TOGGLE_DELETE_EMPLOYEE_DIALOG: {
+    case UPDATE_PRODUCT: {
+      return { 
+        ...state, 
+        employees: _.pickBy(state.employees, employee => employee._id !== action.payload)
+      }
+    }
+    case DELETE_PRODUCT: {
+      return { 
+        ...state, 
+        employees: _.pickBy(state.employees, employee => employee._id !== action.payload)
+      }
+    }
+    case TOGGLE_DELETE_PRODUCT_DIALOG: {
       return {
         ...state,
         underDeleteEmployee: action.payload
