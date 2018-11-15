@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import moment from 'moment'
 import React, { Fragment } from 'react'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
@@ -50,7 +49,6 @@ class ProductsIndex extends React.Component {
       this.props.getInitialBalances(error => {
         if (error) return this.setState({ status: ERROR })
         const { products, initialBalances } = this.props
-        console.log({ products, initialBalances })
         this.setState({ products, initialBalances, status: DONE })
       })
     })
@@ -69,9 +67,7 @@ class ProductsIndex extends React.Component {
   }
 
   handleQuantityChange = (id, quantity) => {
-    console.log('halo dari')
     quantity = quantity.trim().replace(/[^0-9]+/, '').replace(/^0+/, '')
-    console.log('qty', quantity)
     this.setState({
       initialBalances: {
         ...this.state.initialBalances,
@@ -99,10 +95,7 @@ class ProductsIndex extends React.Component {
   shouldSaveChanges = (product) => {
     const { id } = product
     if (this.props.products[id].name !== this.state.products[id].name) return true
-    if (String((this.props.initialBalances[id] || {}).quantity) !== String((this.state.initialBalances[id] || {}).quantity)) {
-      console.log((this.props.initialBalances[id] || {}).quantity, (this.state.initialBalances[id] || {}).quantity)
-      return true
-    }
+    if (String((this.props.initialBalances[id] || {}).quantity) !== String((this.state.initialBalances[id] || {}).quantity)) return true
     if (String((this.props.initialBalances[id] || {}).price) !== String((this.state.initialBalances[id] || {}).price)) return true
     return false
   }
@@ -110,7 +103,7 @@ class ProductsIndex extends React.Component {
   saveChanges = (product) => {
     const { id } = product
     if (this.state.initialBalances[id] && !(this.state.initialBalances[id].price || '').match(/^\d{1,3}(\.\d{3})*(,\d+)?$/)) {
-      return this.props.errorSnackbar('Invalid Value!')
+      return this.props.errorSnackbar('Invalid Format!')
     }
     this.props.updateProduct(id, product, error => {
       if (error) return this.props.errorSnackbar('Failed to Update (1)')
@@ -125,13 +118,26 @@ class ProductsIndex extends React.Component {
     })
   }
 
+  cancelChanges = (product) => {
+    const { id } = product
+    this.setState({
+      initialBalances: {
+        ...this.state.initialBalances,
+        [id]: this.props.initialBalances[id],
+      },
+      products: {
+        ...this.state.products,
+        [id]: this.props.products[id],
+      }
+    })
+  }
+
   async componentDidMount() {
     await this.fetchData()
   }
 
   render() {
     const { classes, products, toggleDeleteProductDialog } = this.props
-    console.log(this.props.initialBalances)
     const { status } = this.state
     // filter method
     const containFilter = (filter, row) => {
@@ -188,8 +194,16 @@ class ProductsIndex extends React.Component {
             <Button 
               variant="outlined" color="primary" className={classes.button}
               onClick={() => this.saveChanges(props.original)} 
-            >  
+              style={{ margin: '0.5em' }}
+            >
               Save
+            </Button>
+            <Button 
+              variant="outlined" color="secondary" className={classes.button}
+              onClick={() => this.cancelChanges(props.original)} 
+              style={{ margin: '0.5em' }}
+            >
+              Cancel
             </Button>
           </div>
         ) : null

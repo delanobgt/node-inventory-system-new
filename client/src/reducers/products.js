@@ -62,7 +62,7 @@ export default function(state = INITIAL_STATE, action) {
         ...state, 
         initialBalances: {
           ...state.initialBalances,
-          [String(action.payload.productID)]: {
+          [action.payload.productID]: {
             ...action.payload,
             quantity: action.payload.quantity,
             price: String(action.payload.price).replace(/,/g, '#').replace(/\./g, ',').replace(/#/g, '.'),

@@ -11,6 +11,9 @@ const Mutation = require('./mutation')(sequelize)
 const Product = require('./product')(sequelize)
 const User = require('./user')(sequelize)
 
+Mutation.belongsTo(Product, {foreignKey: 'productID', targetKey: 'id'})
+Product.hasMany(Mutation, {foreignKey: 'productID', sourceKey: 'id'})
+
 sequelize.sync({
   logging: console.log,
   // force: true,

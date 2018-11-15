@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import React, { Fragment } from 'react'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
@@ -15,33 +14,32 @@ import * as snackbarActions from '../../actions/snackbar'
 class DeleteEmployeeDialog extends React.Component {
 
   handleDelete = () => {
-    const { underDeleteEmployee } = this.props
-    this.props.deleteEmployee(underDeleteEmployee._id, error => {
+    const { underDeleteProduct } = this.props
+    this.props.deleteProduct(underDeleteProduct.id, error => {
       if (error) return this.props.errorSnackbar('Please try again')
-      this.props.toggleDeleteEmployeeDialog(null)
-      this.props.successSnackbar('Deleted Employee')
+      this.props.toggleDeleteProductDialog(null)
+      this.props.successSnackbar('Deleted Product')
     })
   }
   handleClose = () => {
-    this.props.toggleDeleteEmployeeDialog(null)
+    this.props.toggleDeleteProductDialog(null)
   }
 
   render() {
-    const { underDeleteEmployee } = this.props
-    if (!underDeleteEmployee) return null
-    const employeeName = _.compact([underDeleteEmployee.nama_depan, underDeleteEmployee.nama_tengah, underDeleteEmployee.nama_belakang]).join(' ')
+    const { underDeleteProduct } = this.props
+    if (!underDeleteProduct) return null
     return (
       <div>
         <Dialog
-          open={Boolean(underDeleteEmployee)}
+          open={Boolean(underDeleteProduct)}
           onClose={this.handleClose}
           aria-labelledby="form-dialog-title"
         >
           <Fragment>
-            <DialogTitle id="form-dialog-title">Delete Account</DialogTitle>
+            <DialogTitle id="form-dialog-title">Delete Product</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                Delete <span style={{ color: 'blue' }}>{employeeName}</span>'s account permanently?
+                Delete <span style={{ color: 'blue' }}>{underDeleteProduct.name}</span> permanently?
               </DialogContentText>
             </DialogContent>
             <DialogActions>

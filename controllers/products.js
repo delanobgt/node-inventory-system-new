@@ -39,11 +39,15 @@ exports.updateProduct = async (req, res) => {
 exports.deleteProduct = async (req, res) => {
   try {
     const { product_id } = req.params
+    await db.Mutation.destroy({
+      where: { productID: product_id }
+    })
     await db.Product.destroy({
       where: { id: product_id }
     })
     res.json({ success: true })
   } catch (error) {
+    console.log(error)
     res.status(500).json({ error })
   }
 }
