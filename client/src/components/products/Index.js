@@ -49,6 +49,7 @@ class ProductsIndex extends React.Component {
       this.props.getInitialBalances(error => {
         if (error) return this.setState({ status: ERROR })
         const { products, initialBalances } = this.props
+        console.log(initialBalances)
         this.setState({ products, initialBalances, status: DONE })
       })
     })
@@ -105,12 +106,12 @@ class ProductsIndex extends React.Component {
     if (this.state.initialBalances[id] && !(this.state.initialBalances[id].price || '').match(/^\d{1,3}(\.\d{3})*(,\d+)?$/)) {
       return this.props.errorSnackbar('Invalid Format!')
     }
-    this.props.updateProduct(id, product, error => {
+    this.props.updateProduct(id, this.state.products[id], error => {
       if (error) return this.props.errorSnackbar('Failed to Update (1)')
       const { quantity, price } = this.state.initialBalances[id]
       this.props.updateInitialBalance(id, {
         quantity: quantity || 0,
-        price: (price || '0').replace(/,/g, '#').replace(/\./g, ',').replace(/#/g, '.'),
+        price: Number(String(price || '0').replace(/\./g, '').replace(/,/g, '.')),
       }, error => {
         if (error) return this.props.errorSnackbar('Failed to Update (2)')
         this.props.successSnackbar('Successfully updated!')
@@ -139,14 +140,15 @@ class ProductsIndex extends React.Component {
   render() {
     const { classes, products, toggleDeleteProductDialog } = this.props
     const { status } = this.state
+    console.log(this.state.initialBalances[181], this.props.initialBalances[181])
     // filter method
     const containFilter = (filter, row) => {
       return row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
     }
     // [Header, accessor] for react-table
     const columns = [
-      ['No', d => d.order_no],
-      ['Product Name', d => null, (props) => {
+      ['No', d => String(d.order_no)],
+      ['Product Name', d => d.name, (props) => {
         const { id } = props.original
         return (
           <TextField
@@ -154,12 +156,12 @@ class ProductsIndex extends React.Component {
             value={this.state.products[id].name}
             onChange={(e) => this.handleNameChange(id, e.target.value)}
             style={{ display: 'block', width: '100%' }}
-            style={{ background: this.props.products[id].name !== this.state.products[id].name ? 'yellow' : '' }}
+            label={this.props.products[id].name !== this.state.products[id].name ? '(Modified)' : ''}
           >
           </TextField>
         )
       }],
-      ['Initial Quantity', d => null, (props) => {
+      ['Initial Quantity', d => String((this.state.initialBalances[d.id] || {}).quantity), (props) => {
         const { id } = props.original
         const initialBalances = this.state.initialBalances[id] || {}
         return (
@@ -168,12 +170,12 @@ class ProductsIndex extends React.Component {
             value={initialBalances.quantity || 0}
             onChange={(e) => this.handleQuantityChange(id, e.target.value)}
             style={{ display: 'block', width: '100%', textAlign: 'right' }}
-            label={String((this.props.initialBalances[id] || {}).quantity) !== String((this.state.initialBalances[id] || {}).quantity) ? '(Changed)' : ''}
+            label={String((this.props.initialBalances[id] || {}).quantity) !== String((this.state.initialBalances[id] || {}).quantity) ? '(Modified)' : ''}
           >
           </TextField>
         )
       }],
-      ['Initial Price', d => null, (props) => {
+      ['Initial Price', d => String((this.state.initialBalances[d.id] || {}).price), (props) => {
         const { id } = props.original
         const initialBalances = this.state.initialBalances[id] || {}
         return (
@@ -183,12 +185,12 @@ class ProductsIndex extends React.Component {
             onChange={(e) => this.handlePriceChange(id, e.target.value)}
             style={{ display: 'block', width: '100%', textAlign: 'right' }}
             label={this.state.initialBalances[id] && !String(this.state.initialBalances[id].price || '').match(/^\d{1,3}(\.\d{3})*(,\d+)?$/) ? '(Invalid Format)' : 
-              String((this.props.initialBalances[id] || {}).price) !== String((this.state.initialBalances[id] || {}).price) ? '(Changed)' : ''}
+              String((this.props.initialBalances[id] || {}).price) !== String((this.state.initialBalances[id] || {}).price) ? '(Modified)' : ''}
           >
           </TextField>
         )
       }],
-      ['Save Changes', d => null, (props) => (
+      ['Save Changes', d => '', (props) => (
         this.shouldSaveChanges(props.original) ? (
           <div style={{ textAlign: 'center' }}> 
             <Button 
@@ -208,7 +210,7 @@ class ProductsIndex extends React.Component {
           </div>
         ) : null
       )],
-      ['Delete Product', d => null, (props) => (
+      ['Delete Product', d => '', (props) => (
         <div style={{ textAlign: 'center' }}> 
           <DeleteIcon 
             style={{ cursor: 'pointer' }} 
@@ -249,7 +251,7 @@ class ProductsIndex extends React.Component {
       <Fragment>
         <Grid container justify='center'>
           <Grid item xs={11}>
-            <Typography variant="headline" className={classes.headline}>Employee List</Typography>
+            <Typography variant="headline" className={classes.headline}>Product List</Typography>
             { 
               status === LOADING ? (
                 // loading progress circle
@@ -274,6 +276,7 @@ class ProductsIndex extends React.Component {
             <DeleteProductDialog/>
           </Grid>
         </Grid>
+        <br/><br/>
       </Fragment>
     )
   }

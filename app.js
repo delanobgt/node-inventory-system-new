@@ -21,12 +21,12 @@ app.use('/products', require('./routes/products'))
 // The only routes
 app.use(express.static(path.join(__dirname + '/client/build/')))
 app.get('*', (req, res) => {
-  // res.sendFile('index.html')
-  res.send('index page')
+  res.sendFile('index.html')
+  // res.send('index page')
 })
 
 // Server Setup
-const PORT = process.env.PORT || 3080
+const PORT = process.env.PORT || 3010
 app.listen(PORT, () => {
   console.log('\n\n\n')
   console.log(`Server listening on port ${PORT}.`)

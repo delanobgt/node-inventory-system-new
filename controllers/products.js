@@ -13,9 +13,9 @@ exports.getProducts = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
   try {
-    const { name } = req.body
+    const name = req.body.name.trim()
     const product = await db.Product.create({ name })
-    res.json({ product })
+    res.json(product)
   } catch (error) {
     res.status(500).json({ error })
   }
@@ -24,13 +24,13 @@ exports.createProduct = async (req, res) => {
 exports.updateProduct = async (req, res) => {
   try {
     const { product_id } = req.params
-    const { name } = req.body
+    const name = req.body.name.trim()
     const product = await db.Product.findOne({
       where: { id: product_id }
     })
     product.set('name', name)
     await product.save()
-    res.json({ product })
+    res.json(product)
   } catch (error) {
     res.status(500).json({ error })
   }

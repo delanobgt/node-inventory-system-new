@@ -38,7 +38,7 @@ export const createProduct = (product, callback) => async (dispatch) => {
 
 export const updateProduct = (id, newProduct, callback) => async (dispatch) => {
   try {
-		const response = await axios.put(`${ROOT_URL}/products/${id}`, newProduct)
+    const response = await axios.put(`${ROOT_URL}/products/${id}`, newProduct)
     dispatch({
       type: UPDATE_PRODUCT,
       payload: response.data

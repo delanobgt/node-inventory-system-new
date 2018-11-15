@@ -19,4 +19,4 @@ export const GET_INITIAL_BALANCES = 'GET_INITIAL_BALANCES'
 export const UPDATE_INITIAL_BALANCE = 'UPDATE_INITIAL_BALANCE'
 
 // root/base url for any API request
-export const ROOT_URL = 'http://localhost:3080'
+export const ROOT_URL = 'http://localhost:3010'

@@ -15,12 +15,19 @@ const INITIAL_STATE = {
   underDeleteProduct: null,
 }
 
+function formatIndo(num) {
+  return num.toLocaleString('us', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 4
+  }).replace(/,/g, '#').replace(/\./g, ',').replace(/#/g, '.')
+}
+
 export default function(state = INITIAL_STATE, action) {
   switch (action.type) {
     case GET_PRODUCTS: {
       return { 
         ...state, 
-        products: _.mapKeys(action.payload, 'id'),
+        products: _.mapKeys(action.payload, d => String(d.id)),
       }
     }
     case CREATE_PRODUCT:
@@ -29,7 +36,7 @@ export default function(state = INITIAL_STATE, action) {
         ...state, 
         products: {
           ...state.products,
-          [action.payload.id]: action.payload,
+          [String(action.payload.id)]: action.payload,
         }
       }
     }
@@ -49,10 +56,10 @@ export default function(state = INITIAL_STATE, action) {
       return { 
         ...state, 
         initialBalances: _.chain(action.payload)
-          .mapKeys('productID')
+          .mapKeys(d => String(d.productID))
           .mapValues(initialBalance => ({
             ...initialBalance,
-            price: String(initialBalance.price).replace(/,/g, '#').replace(/\./g, ',').replace(/#/g, '.'),
+            price: formatIndo(Number(initialBalance.price)),
           }))
           .value()
       }
@@ -62,10 +69,10 @@ export default function(state = INITIAL_STATE, action) {
         ...state, 
         initialBalances: {
           ...state.initialBalances,
-          [action.payload.productID]: {
+          [String(action.payload.productID)]: {
             ...action.payload,
             quantity: action.payload.quantity,
-            price: String(action.payload.price).replace(/,/g, '#').replace(/\./g, ',').replace(/#/g, '.'),
+            price: formatIndo(Number(action.payload.price)),
           }
         }
       }
