@@ -5,11 +5,14 @@ import {
   DELETE_PRODUCT,
   UPDATE_PRODUCT,
   TOGGLE_DELETE_PRODUCT_DIALOG,
+  GET_INITIAL_BALANCES,
+  UPDATE_INITIAL_BALANCE,
 } from '../actions/conf'
 
 const INITIAL_STATE = {
-  employees: {},
-  underDeleteEmployee: null,
+  products: {},
+  initialBalances: {},
+  underDeleteProduct: null,
 }
 
 export default function(state = INITIAL_STATE, action) {
@@ -17,31 +20,54 @@ export default function(state = INITIAL_STATE, action) {
     case GET_PRODUCTS: {
       return { 
         ...state, 
-        employees: _.mapKeys(action.payload, '_id')
+        products: _.mapKeys(action.payload, 'id'),
       }
     }
-    case CREATE_PRODUCT: {
-      return { 
-        ...state, 
-        employees: _.pickBy(state.employees, employee => employee._id !== action.payload)
-      }
-    }
+    case CREATE_PRODUCT:
     case UPDATE_PRODUCT: {
       return { 
         ...state, 
-        employees: _.pickBy(state.employees, employee => employee._id !== action.payload)
+        products: {
+          ...state.products,
+          [action.payload.id]: action.payload,
+        }
       }
     }
     case DELETE_PRODUCT: {
       return { 
         ...state, 
-        employees: _.pickBy(state.employees, employee => employee._id !== action.payload)
+        products: _.pickBy(state.products, product => product.id !== action.payload)
       }
     }
     case TOGGLE_DELETE_PRODUCT_DIALOG: {
       return {
         ...state,
-        underDeleteEmployee: action.payload
+        underDeleteProduct: action.payload
+      }
+    }
+    case GET_INITIAL_BALANCES: {
+      return { 
+        ...state, 
+        initialBalances: _.chain(action.payload)
+          .mapKeys('productID')
+          .mapValues(initialBalance => ({
+            ...initialBalance,
+            price: String(initialBalance.price).replace(/,/g, '#').replace(/\./g, ',').replace(/#/g, '.'),
+          }))
+          .value()
+      }
+    }
+    case UPDATE_INITIAL_BALANCE: {
+      return { 
+        ...state, 
+        initialBalances: {
+          ...state.initialBalances,
+          [String(action.payload.productID)]: {
+            ...action.payload,
+            quantity: action.payload.quantity,
+            price: String(action.payload.price).replace(/,/g, '#').replace(/\./g, ',').replace(/#/g, '.'),
+          }
+        }
       }
     }
     default: {

@@ -9,8 +9,8 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 
-import * as employeesActions from '../../../actions/employees'
-import * as snackbarActions from '../../../actions/snackbar'
+import * as productsActions from '../../actions/products'
+import * as snackbarActions from '../../actions/snackbar'
 
 class DeleteEmployeeDialog extends React.Component {
 
@@ -61,10 +61,10 @@ class DeleteEmployeeDialog extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    ...state.employees
+    ...state.products
   }
 }
 
 export default compose(
-  connect(mapStateToProps, { ...employeesActions, ...snackbarActions }),
+  connect(mapStateToProps, { ...productsActions, ...snackbarActions }),
 )(DeleteEmployeeDialog)

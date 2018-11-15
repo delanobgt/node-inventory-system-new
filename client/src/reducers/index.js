@@ -3,12 +3,12 @@ import { reducer as formReducer } from 'redux-form'
 import auth from './auth'
 import nav from './nav'
 import snackbar from './snackbar'
-import employees from './employees'
+import products from './products'
 
 export default combineReducers({
   auth,
   nav,
   snackbar,
-  employees,
+  products,
   form: formReducer,
 })

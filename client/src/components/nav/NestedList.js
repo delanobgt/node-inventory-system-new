@@ -74,6 +74,8 @@ class NestedList extends React.Component {
               <ListItemIcon><DashboardIcon/></ListItemIcon>
               <ListItemText inset primary="Dashboard" />
             </ListItem>
+          </CleanLink>
+          <CleanLink to='/products' onClick={this.closeDrawer}>
             <ListItem button>
               <ListItemIcon><LibraryBooksIcon/></ListItemIcon>
               <ListItemText inset primary="Products" />

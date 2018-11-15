@@ -17,6 +17,7 @@ export const signUp = (formProps, callback) => async dispatch => {
     })
     if (callback) callback()
   } catch (error) {
+    console.log(error)
     if (callback) callback(error)
     dispatch({
       type: AUTH_ERROR,

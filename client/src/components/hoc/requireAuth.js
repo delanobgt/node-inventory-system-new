@@ -12,16 +12,7 @@ export default ChildComponent => {
     }
 
     componentDidMount() {
-      if (this.props.token) {
-        this.props.getSelfProfile(error => {
-          if (error) {
-            if (this.props.history) this.props.history.goBack()  
-            this.props.errorSnackbar(`Can't read Profile!`)
-            return 
-          }
-          this.shouldNavigateAway()
-        })
-      }
+      this.shouldNavigateAway()
     }
 
     shouldNavigateAway = () => {

@@ -134,9 +134,6 @@ class SignIn extends Component {
               Don't have an account yet? &nbsp;
               <CleanLink to='/signup'>Sign Up!</CleanLink>
             </Typography>
-            <Typography component="p" align="center">
-              <CleanLink to='/forgotpassword'>Forgot password</CleanLink>
-            </Typography>
           </Paper>
         </Grid>
       </Fragment>

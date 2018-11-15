@@ -63,6 +63,7 @@ exports.getInitialBalances = async (req, res) => {
 
 exports.updateInitialBalance = async (req, res) => {
   const { product_id } = req.params
+  console.log(req.body)
   try {
     let product = await db.Product.findOne({
       where: { id: product_id }

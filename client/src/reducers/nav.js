@@ -1,4 +1,5 @@
-import { TOGGLE_DRAWER } from '../actions/conf'
+import { 
+  TOGGLE_DRAWER } from '../actions/conf'
 
 const INITIAL_STATE = {
   drawerOpen: false

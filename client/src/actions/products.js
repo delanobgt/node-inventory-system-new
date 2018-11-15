@@ -6,6 +6,8 @@ import {
   DELETE_PRODUCT,
   UPDATE_PRODUCT,
   TOGGLE_DELETE_PRODUCT_DIALOG,
+  GET_INITIAL_BALANCES,
+  UPDATE_INITIAL_BALANCE,
 } from './conf'
 
 export const getProducts = (callback) => async (dispatch) => {
@@ -65,4 +67,30 @@ export const toggleDeleteProductDialog = (product) => (dispatch) => {
 		type: TOGGLE_DELETE_PRODUCT_DIALOG,
 		payload: product
 	})
+}
+
+export const getInitialBalances = (callback) => async (dispatch) => {
+  try {
+    const response = await axios.get(`${ROOT_URL}/products/initial-balances`)
+    dispatch({
+      type: GET_INITIAL_BALANCES,
+      payload: response.data
+    })
+    if (callback) callback()
+  } catch (error) {
+    if (callback) callback(error)
+  }
+}
+
+export const updateInitialBalance = (id, initialBalance, callback) => async (dispatch) => {
+  try {
+		const response = await axios.put(`${ROOT_URL}/products/${id}/initial-balance`, initialBalance)
+    dispatch({
+      type: UPDATE_INITIAL_BALANCE,
+      payload: response.data
+    })
+    if (callback) callback()
+  } catch (error) {
+    if (callback) callback(error)
+  }
 }

@@ -10,7 +10,7 @@ import SignUp from './auth/SignUp'
 import SignOut from './auth/SignOut'
 import SignIn from './auth/SignIn'
 
-import EmployeeList from './employees/employee-list/Index'
+import ProductsIndex from './products/Index'
 
 class App extends Component {
 
@@ -35,7 +35,7 @@ class App extends Component {
                   <Route path="/" exact component={Welcome} />
                   <Route path="/signout" component={SignOut} />
 
-                  <Route path="/employees" exact component={EmployeeList} />
+                  <Route path="/products" exact component={ProductsIndex} />
 
                   <Route path="*" component={ () => <Redirect to="/"/> }/>
                 </Switch>
