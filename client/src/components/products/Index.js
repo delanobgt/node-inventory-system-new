@@ -32,6 +32,9 @@ const styles = theme => ({
   },
   excelButton: {
     marginBottom: '1em'
+  },
+  textField: {
+    width: '500px',
   }
 })
 
@@ -40,6 +43,7 @@ class ProductsIndex extends React.Component {
     status: LOADING,
     products: {},
     initialBalances: {},
+    newProductName: '',
   }
 
   fetchData = async () => {
@@ -49,7 +53,6 @@ class ProductsIndex extends React.Component {
       this.props.getInitialBalances(error => {
         if (error) return this.setState({ status: ERROR })
         const { products, initialBalances } = this.props
-        console.log(initialBalances)
         this.setState({ products, initialBalances, status: DONE })
       })
     })
@@ -115,6 +118,10 @@ class ProductsIndex extends React.Component {
       }, error => {
         if (error) return this.props.errorSnackbar('Failed to Update (2)')
         this.props.successSnackbar('Successfully updated!')
+        this.setState({
+          initialBalances: this.props.initialBalances,
+          products: this.props.products,
+        })
       })
     })
   }
@@ -133,6 +140,24 @@ class ProductsIndex extends React.Component {
     })
   }
 
+  handleNewProductNameChange = (e) => {
+    const { value } = e.target
+    this.setState({ newProductName: value })
+  }
+
+  createProduct = (e) => {
+    e.preventDefault()
+    const product = { name: this.state.newProductName }
+    this.props.createProduct(product, (error) => {
+      if (error) return this.props.errorSnackbar('Failed to Add New Product!')
+      this.props.successSnackbar('New Product added')
+      this.setState({
+        newProductName: '',
+        products: this.props.products,
+      })
+    })
+  }
+
   async componentDidMount() {
     await this.fetchData()
   }
@@ -140,7 +165,6 @@ class ProductsIndex extends React.Component {
   render() {
     const { classes, products, toggleDeleteProductDialog } = this.props
     const { status } = this.state
-    console.log(this.state.initialBalances[181], this.props.initialBalances[181])
     // filter method
     const containFilter = (filter, row) => {
       return row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
@@ -270,9 +294,25 @@ class ProductsIndex extends React.Component {
                     Retry
                   </Button>
                 </Fragment>
+              ) : status === DONE ? (
+                <Fragment>
+                  <form style={{ display: 'flex', alignItems: 'center' }} onSubmit={this.createProduct}>
+                    <TextField
+                      label="New Product Name"
+                      className={classes.textField}
+                      value={this.state.newProductName}
+                      onChange={this.handleNewProductNameChange}
+                      margin="normal"
+                      required={true}
+                    />
+                    <Button type="submit" variant="contained" color="primary" className={classes.button}>
+                      Add
+                    </Button>
+                  </form>
+                  { table }
+                </Fragment>
               ) : null
             }
-            { table }
             <DeleteProductDialog/>
           </Grid>
         </Grid>
