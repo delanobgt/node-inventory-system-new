@@ -64,7 +64,7 @@ class NestedList extends React.Component {
           subheader={
             <CleanLink to='/' onClick={this.closeDrawer}>
               <ListSubheader component="div">
-                <img src={UPHLogo} alt="HRIS UPH | Medan Campus" style={{ width: '100%' }} />
+                {/* <img src={UPHLogo} alt="HRIS UPH | Medan Campus" style={{ width: '100%' }} /> */}
               </ListSubheader>
             </CleanLink>
           }
@@ -79,6 +79,12 @@ class NestedList extends React.Component {
             <ListItem button>
               <ListItemIcon><LibraryBooksIcon/></ListItemIcon>
               <ListItemText inset primary="Products" />
+            </ListItem>
+          </CleanLink>
+          <CleanLink to='/products' onClick={e => {e.preventDefault(); window.location = "http://localhost:3020/dashboard";}}>
+            <ListItem button>
+              <ListItemIcon><LibraryBooksIcon/></ListItemIcon>
+              <ListItemText inset primary="Mutations" />
             </ListItem>
           </CleanLink>
         </List>
