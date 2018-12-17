@@ -15,20 +15,20 @@
   "dependencies": {
     "bcrypt-nodejs": "*",
     "body-parser": "*",
-    "cors": "^2.8.4",
-    "dotenv": "^6.0.0",
-    "express": "*",
-    "jwt-simple": "*",
+    "cors": "^2.8.5",
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
+    "jwt-simple": "^0.5.5",
     "lodash": "^4.17.11",
     "method-override": "^3.0.0",
-    "moment": "^2.22.2",
+    "moment": "^2.23.0",
     "multer": "^1.4.1",
-    "nodemon": "*",
+    "nodemon": "^1.18.9",
     "passport": "*",
     "passport-jwt": "*",
     "passport-local": "*",
-    "sequelize": "^4.41.2",
+    "sequelize": "^4.42.0",
     "sqlite3": "^4.0.4",
-    "xlsx": "^0.11.14"
+    "xlsx": "^0.11.19"
   }
 }
